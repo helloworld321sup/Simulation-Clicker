@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background: #f4f4f4;
+  background: #f0f0f0;
   margin: 0;
   padding: 20px;
 }
@@ -12,6 +12,7 @@ h1 {
 
 #stats {
   margin-bottom: 20px;
+  font-size: 18px;
 }
 
 button {
@@ -32,4 +33,46 @@ button:hover {
 
 #shop {
   margin-top: 30px;
+}
+
+.shop-item {
+  margin: 10px 0;
+}
+
+.save-status {
+  font-size: 14px;
+  color: green;
+  display: none;
+}
+
+/* existing styles... */
+
+button:active {
+  transform: scale(0.9);
+}
+
+/* Pop animation for click button */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.pop {
+  animation: pop 0.2s ease;
+}
+
+/* Floating text animation */
+.floating-text {
+  position: absolute;
+  font-size: 16px;
+  color: gold;
+  font-weight: bold;
+  animation: floatUp 1s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
 }
