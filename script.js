@@ -1,11 +1,21 @@
-// --- Game state ---
+// --- Game state with GIFs ---
 let game = {
   coins: 0,
   coinsPerClick: 1,
   coinsPerSecond: 0,
   upgrades: {
-    clickPower: { cost: 50, level: 0, effect: () => game.coinsPerClick++ },
-    autoClicker: { cost: 100, level: 0, effect: () => game.coinsPerSecond++ }
+    clickPower: { 
+      cost: 50, 
+      level: 0, 
+      effect: () => game.coinsPerClick++, 
+      img: "https://i.giphy.com/feio2yIUMtdqWjRiaF.webp" // hammer gif
+    },
+    autoClicker: { 
+      cost: 100, 
+      level: 0, 
+      effect: () => game.coinsPerSecond++, 
+      img: "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZGx6bmdweXJlZzdrdGlxd3loZmQxMHRqdTFpOXl3Mmk1YWNra2pmbyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/svsszftgqEEM0pnpAc/source.gif" // robot gif
+    }
   }
 };
 
@@ -25,34 +35,26 @@ function updateUI() {
   renderShop();
 }
 
-// --- Click event ---
+// --- Click event with animation ---
 clickBtn.addEventListener("click", () => {
-  game.coins += game.coinsPerClick;
-  updateUI();
-});
-
-clickBtn.addEventListener("click", (e) => {
   game.coins += game.coinsPerClick;
   updateUI();
   saveGame();
 
-  // --- Button pop animation ---
+  // Button pop animation
   clickBtn.classList.add("pop");
   setTimeout(() => clickBtn.classList.remove("pop"), 200);
 
-  // --- Floating text (+coins) ---
+  // Floating text
   const floating = document.createElement("span");
   floating.className = "floating-text";
   floating.textContent = `+${game.coinsPerClick}`;
-  
-  // Position near the click button
+
   const rect = clickBtn.getBoundingClientRect();
   floating.style.left = rect.left + rect.width / 2 + "px";
   floating.style.top = rect.top + window.scrollY + "px";
-  
-  document.body.appendChild(floating);
 
-  // Remove after animation
+  document.body.appendChild(floating);
   setTimeout(() => floating.remove(), 1000);
 });
 
@@ -61,24 +63,43 @@ function renderShop() {
   shopItemsEl.innerHTML = "";
   for (let key in game.upgrades) {
     const upgrade = game.upgrades[key];
-    const btn = document.createElement("button");
-    btn.className = "shop-item";
-    btn.textContent = `${key} (Cost: ${upgrade.cost}, Lvl: ${upgrade.level})`;
-    btn.disabled = game.coins < upgrade.cost;
 
-    btn.addEventListener("click", () => buyUpgrade(key));
-    shopItemsEl.appendChild(btn);
+    const container = document.createElement("div");
+    container.className = "shop-item";
+
+    const img = document.createElement("img");
+    img.src = upgrade.img;
+
+    const text = document.createElement("span");
+    text.textContent = `${key} (Cost: ${upgrade.cost}, Lvl: ${upgrade.level})`;
+
+    container.appendChild(img);
+    container.appendChild(text);
+
+    container.addEventListener("click", () => buyUpgrade(key, container));
+
+    if (game.coins < upgrade.cost) {
+      container.style.opacity = 0.5;
+      container.style.pointerEvents = "none";
+    }
+
+    shopItemsEl.appendChild(container);
   }
 }
 
-// --- Buy upgrade ---
-function buyUpgrade(key) {
+// --- Buy upgrade (merged) ---
+function buyUpgrade(key, element) {
   const upgrade = game.upgrades[key];
   if (game.coins >= upgrade.cost) {
     game.coins -= upgrade.cost;
     upgrade.level++;
     upgrade.effect();
-    upgrade.cost = Math.floor(upgrade.cost * 1.5); // cost scaling
+    upgrade.cost = Math.floor(upgrade.cost * 1.5);
+
+    // Flash animation
+    element.classList.add("flash");
+    setTimeout(() => element.classList.remove("flash"), 500);
+
     updateUI();
     saveGame();
   }
