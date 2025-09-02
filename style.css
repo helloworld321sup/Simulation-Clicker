@@ -76,3 +76,41 @@ button:active {
   0% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-40px); }
 }
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  margin: 10px auto;
+  width: 300px;
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  background: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.shop-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+}
+
+.shop-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.shop-item.flash {
+  background: #2ecc71 !important;
+  color: white;
+  animation: flash 0.5s;
+}
+
+@keyframes flash {
+  0% { background: #2ecc71; }
+  100% { background: white; }
+}
+
